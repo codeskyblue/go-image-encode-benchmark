@@ -18,8 +18,8 @@ import (
 )
 
 var (
-	cachedData      = map[string][]byte{}
-	cachedImageData = map[string]image.Image{}
+	cachedData = map[string][]byte{}
+	img        image.Image
 )
 
 func GetFileReader(fileType string) io.Reader {
@@ -35,23 +35,15 @@ func GetFileReader(fileType string) io.Reader {
 	return bytes.NewReader(data)
 }
 
-func GetImage(fileType string) image.Image {
-	img, ok := cachedImageData[fileType]
-	if ok {
-		return img
-	}
-	img, _, err := image.Decode(GetFileReader(fileType))
-	if err != nil {
-		panic(err)
-	}
-	cachedImageData[fileType] = img
-	return img
-}
-
 func init() {
 	// init read
 	for _, ft := range []string{"jpg"} {
 		GetFileReader(ft)
+	}
+	var err error
+	img, _, err = image.Decode(GetFileReader("png"))
+	if err != nil {
+		panic(err)
 	}
 }
 
@@ -68,7 +60,7 @@ func BenchmarkJpegDecode(b *testing.B) {
 }
 
 func BenchmarkJpegEncode(b *testing.B) {
-	img := GetImage("jpg")
+	// img := GetImage("jpg")
 	buf := bytes.NewBuffer(nil)
 	for n := 0; n < b.N; n++ {
 		buf.Reset()
@@ -85,7 +77,6 @@ func BenchmarkPngDecode(b *testing.B) {
 }
 
 func BenchmarkPngEncode(b *testing.B) {
-	img := GetImage("png")
 	buf := bytes.NewBuffer(nil)
 	for n := 0; n < b.N; n++ {
 		buf.Reset()
@@ -101,7 +92,6 @@ func BenchmarkTiffDecode(b *testing.B) {
 }
 
 func BenchmarkTiffEncode(b *testing.B) {
-	img := GetImage("tiff")
 	buf := bytes.NewBuffer(nil)
 	for n := 0; n < b.N; n++ {
 		buf.Reset()
