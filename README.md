@@ -20,6 +20,10 @@ Golang Image encode bench mark
 ## Result
 2016-10-14
 
+> System: Win 10
+> Memory: 8G
+> CPU: i5-4570
+
 ```
 -- Decode --
 main.BenchmarkJpegDecode        50      32 ms/op
