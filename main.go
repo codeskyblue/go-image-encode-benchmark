@@ -6,6 +6,7 @@ import (
 	"image"
 	"io"
 	"io/ioutil"
+	"log"
 	"reflect"
 	"runtime"
 	"testing"
@@ -13,6 +14,7 @@ import (
 	"image/jpeg"
 	"image/png"
 
+	turboJpeg "github.com/pixiv/go-libjpeg/jpeg"
 	"golang.org/x/image/tiff"
 	_ "golang.org/x/image/webp"
 )
@@ -40,11 +42,15 @@ func init() {
 	for _, ft := range []string{"jpg"} {
 		GetFileReader(ft)
 	}
+}
+
+func setupImage(ft string) {
 	var err error
-	img, _, err = image.Decode(GetFileReader("png"))
+	img, _, err = image.Decode(GetFileReader(ft))
 	if err != nil {
 		panic(err)
 	}
+	fmt.Printf("image type: %T\n", img)
 }
 
 func getFunctionName(i interface{}) string {
@@ -60,11 +66,21 @@ func BenchmarkJpegDecode(b *testing.B) {
 }
 
 func BenchmarkJpegEncode(b *testing.B) {
-	// img := GetImage("jpg")
 	buf := bytes.NewBuffer(nil)
 	for n := 0; n < b.N; n++ {
 		buf.Reset()
 		jpeg.Encode(buf, img, &jpeg.Options{jpeg.DefaultQuality})
+	}
+}
+
+func BenchmarkTurboJpegEncode(b *testing.B) {
+	buf := bytes.NewBuffer(nil)
+	for n := 0; n < b.N; n++ {
+		buf.Reset()
+		err := turboJpeg.Encode(buf, img, &turboJpeg.EncoderOptions{Quality: 70})
+		if err != nil {
+			b.Fatal(err)
+		}
 	}
 }
 
@@ -112,14 +128,52 @@ func runBench(benchFunc func(*testing.B)) {
 	fmt.Printf("%-24s\t%d\t%d ms/op\n", funcName, br.N, br.NsPerOp()/1e6)
 }
 
+func testTurboEncodeRGBA() {
+	setupImage("png")
+	buf := bytes.NewBuffer(nil)
+	buf.Reset()
+	err := turboJpeg.Encode(buf, img, &turboJpeg.EncoderOptions{Quality: 70})
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println(ioutil.WriteFile("out.jpg", buf.Bytes(), 0644))
+}
+
+func testTurboEncodeGray() {
+	setupImage("png")
+	data, _ := ioutil.ReadFile("image-gray.png")
+	img, _, err := image.Decode(bytes.NewReader(data))
+	if err != nil {
+		log.Fatal(err)
+	}
+	buf := bytes.NewBuffer(nil)
+	err = turboJpeg.Encode(buf, img, &turboJpeg.EncoderOptions{})
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 func main() {
+	//testTurboEncodeRGBA()
+	//testTurboEncodeGray()
+	//return
+
 	println("-- Decode --")
+	//runBench(BenchmarkTurboJpegDecode) // commit it on windows
 	runBench(BenchmarkJpegDecode)
 	runBench(BenchmarkPngDecode)
 	runBench(BenchmarkWebpDecode)
 	runBench(BenchmarkTiffDecode)
 	println("-- Encode --")
+	setupImage("jpg")
 	runBench(BenchmarkJpegEncode)
 	runBench(BenchmarkPngEncode)
 	runBench(BenchmarkTiffEncode)
+	runBench(BenchmarkTurboJpegEncode) // commit it on windows
+	println("-- Encode --")
+	setupImage("png")
+	runBench(BenchmarkJpegEncode)
+	runBench(BenchmarkPngEncode)
+	runBench(BenchmarkTiffEncode)
+	runBench(BenchmarkTurboJpegEncode) // commit it on windows
 }

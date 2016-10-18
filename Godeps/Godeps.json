@@ -1,0 +1,41 @@
+{
+	"ImportPath": "go-image-encode-benchmark",
+	"GoVersion": "go1.7",
+	"GodepVersion": "v74",
+	"Deps": [
+		{
+			"ImportPath": "github.com/pixiv/go-libjpeg/jpeg",
+			"Comment": "v0.1-51-gc44c167",
+			"Rev": "c44c1674761a92bac013630895d4923671838658"
+		},
+		{
+			"ImportPath": "github.com/pixiv/go-libjpeg/rgb",
+			"Comment": "v0.1-51-gc44c167",
+			"Rev": "c44c1674761a92bac013630895d4923671838658"
+		},
+		{
+			"ImportPath": "golang.org/x/image/riff",
+			"Rev": "992afa5d487805a7bb3e0d8368bb76e70ef1777f"
+		},
+		{
+			"ImportPath": "golang.org/x/image/tiff",
+			"Rev": "992afa5d487805a7bb3e0d8368bb76e70ef1777f"
+		},
+		{
+			"ImportPath": "golang.org/x/image/tiff/lzw",
+			"Rev": "992afa5d487805a7bb3e0d8368bb76e70ef1777f"
+		},
+		{
+			"ImportPath": "golang.org/x/image/vp8",
+			"Rev": "992afa5d487805a7bb3e0d8368bb76e70ef1777f"
+		},
+		{
+			"ImportPath": "golang.org/x/image/vp8l",
+			"Rev": "992afa5d487805a7bb3e0d8368bb76e70ef1777f"
+		},
+		{
+			"ImportPath": "golang.org/x/image/webp",
+			"Rev": "992afa5d487805a7bb3e0d8368bb76e70ef1777f"
+		}
+	]
+}
