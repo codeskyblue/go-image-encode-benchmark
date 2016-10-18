@@ -64,7 +64,29 @@ image type: *image.RGBA
 main.BenchmarkJpegEncode        20      82 ms/op
 main.BenchmarkPngEncode         2       501 ms/op
 main.BenchmarkTiffEncode        5       275 ms/op
-main.BenchmarkTurboJpegEncode   0       0 ms/op
+main.BenchmarkTurboJpegEncode   0       0 ms/op (ERROR)
+```
+
+> System: Raspberry 2
+
+```
+-- Decode --
+main.BenchmarkJpegDecode	2	985 ms/op
+main.BenchmarkPngDecode		1	2268 ms/op
+main.BenchmarkWebpDecode	1	1642 ms/op
+main.BenchmarkTiffDecode	3	337 ms/op
+-- Encode --
+image type: *image.YCbCr
+main.BenchmarkJpegEncode	1	4774 ms/op
+main.BenchmarkPngEncode		1	25123 ms/op
+main.BenchmarkTiffEncode	1	9901 ms/op
+main.BenchmarkTurboJpegEncode	5	288 ms/op
+-- Encode --
+image type: *image.RGBA
+main.BenchmarkJpegEncode	1	2083 ms/op
+main.BenchmarkPngEncode		1	10212 ms/op
+main.BenchmarkTiffEncode	1	6896 ms/op
+main.BenchmarkTurboJpegEncode	3	352 ms/op
 ```
 
 ## turbo-jpeg
