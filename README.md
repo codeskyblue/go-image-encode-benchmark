@@ -24,7 +24,14 @@ On Mac OS X: `brew install libjpeg-turbo`
 * vp8 (todo)
 * vp8l (todo)
 
+## Run Tests
+```
+go run main.go
+```
+
 ## Result
+Image 1080x1920
+
 2016-10-14
 
 > System: Win 10
